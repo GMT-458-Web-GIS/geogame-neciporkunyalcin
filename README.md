@@ -1,86 +1,107 @@
 # GMT458 – Web GIS – Assignment 2: GeoGame
 
-## 1. Game Concept
+## 1. Game Title
 
-**Game name:** Geosport 
-
-The game is a web-based geo-game where the player tries to guess **world cities** based on:
-- A **satellite basemap** (Mapbox Satellite tiles displayed in the browser),
-- A **sports-related hint** about the city (e.g. famous football club, number of championships, hosting a big tournament).
-
-The player must click on the map to indicate their guess. The distance between the guessed point and the true city location determines the score.
+**Satellite Sports City Guessr**
 
 ---
 
-## 2. Game Progression
+## 2. Aim
 
-- The game proceeds in **rounds**.
-- In each round:
-  1. A **random world city** is selected from a predefined list (with coordinates and a sports hint).
-  2. The map is shown in **satellite view**, initially zoomed to a global/continental extent.
-  3. A **sports hint text** is displayed on the right panel.
-  4. A **45-second timer** starts.
-  5. The player clicks on the map to guess the city location.
-  6. When the player submits the guess (or the timer ends):
-     - The distance between the guess and the true city is calculated.
-     - If the guess is within a certain distance threshold (e.g. 150–200 km), the answer is considered **correct**.
-     - The score is updated based on **distance** and **time left**.
-     - A marker is shown for the true city location and (optionally) for the guess location, with a line between them.
+The aim of this project is to design and develop a web-based **geo-game** that runs in the browser and includes:
 
-- Difficulty can be increased by:
-  - Choosing less obvious cities in later rounds,
-  - Decreasing the distance threshold,
-  - Or slightly zooming in the map (showing less context).
+- An interactive web map,
+- A temporal component (round timer),
+- A scoring system,
+- A clear set of game rules.
+
+The game is implemented using **HTML, CSS, and JavaScript** with **OpenLayers** as the main mapping library.
 
 ---
 
-## 3. Number of Questions and Lives
+## 3. Game Concept
 
-- The player has **3 lives**:
-  - A life is lost when:
-    - The guess is too far away from the correct location (outside the distance threshold), or
-    - The **45-second timer** runs out before submitting a guess.
-  - When all 3 lives are used, the game ends immediately, even if there are remaining rounds.
+**Satellite Sports City Guessr** is a world-city guessing game based on:
 
----
+- A **satellite-like basemap** (Esri World Imagery),
+- A **sports-related hint** for each round.
 
-## 4. Time / Temporal Component
+The player:
 
-- Each question has a **45-second countdown**.
-- The timer is shown in the right panel (e.g. `Time left: 45 s`).
-- When the timer reaches zero:
-  - The round is automatically marked as **lost**,
-  - The player loses **1 life**,
-  - The correct city location is displayed on the map,
-  - The game proceeds to the next round (if lives remain).
+- Reads a sports-related hint about a city (e.g. football club success, Olympic host city, famous derby),
+- Tries to guess where this city is by clicking on the map,
+- Submits their guess and receives a score based on:
+  - **Distance** between their guess and the true city location,
+  - **Remaining time** on the countdown.
 
-This provides the required temporal component for the assignment.
+The game continues **until the player loses all 3 lives**.  
+There is **no fixed question limit** (no “10 questions only”); rounds continue as long as the player survives.
 
 ---
 
-## 5. Scoring System
+## 4. Game Rules (as shown in the in-game modal)
 
-- Each correct answer gives a base score (e.g. 1000 points).
-- The score is then reduced according to:
-  - The **distance error** (km),
-  - The **remaining time**.
+When the page loads, a modal window appears with the rules. In summary:
 
-- The scoreboard shows:
-  - Current round,
-  - Current total score,
-  - Best score (stored in browser localStorage, optional).
+- The game continues until the player loses all **3 lives**.
+- Each round has a **45-second timer**.
+- In every round, the player sees **one sports-related hint** about a world city.
+- The player must:
+  1. Look at the hint,
+  2. Click on the map to choose a city location,
+  3. Press **“Submit Guess”**.
+- The score is higher when the guess is:
+  - **closer** to the real city,
+  - **faster** (more time left on the timer).
+- If the guess is **too far away** (beyond a distance threshold) or the **time runs out**, the player loses **one life**.
+- The game ends when **all 3 lives are lost**.
+
+These rules are also shown to the user in a **“How to Play”** modal before the first game starts.
 
 ---
 
-## 6. Data: Cities and Sports Hints
+## 5. Game Progression
 
-- A small **JavaScript array** (hard-coded) will be used to store world cities:
-  - City name,
-  - Country,
-  - Latitude and longitude,
-  - Sports-related hint text.
+### 5.1 Rounds
 
-Example data structure:
+- There is **no fixed maximum number of rounds**.
+- The game keeps a **round counter** (Round: 1, 2, 3, …),
+- Each new round:
+  - Selects a city from a shuffled list of cities (`cities.js`),
+  - Shows a new sports hint,
+  - Resets the timer to 45 seconds,
+  - Resets the map view to a global extent.
+
+### 5.2 Lives
+
+- The player starts with **3 lives**.
+- A life is lost when:
+  - The guess is outside the allowed distance threshold from the true city, or
+  - The timer reaches zero before a guess is submitted.
+- When lives reach **0**, the game ends and the final score is displayed.
+
+### 5.3 Temporal Component
+
+- Each round has a **45-second countdown timer** (temporal component).
+- The timer is shown in the UI (`Time: 45 s` → `Time: 0 s`).
+- When the remaining time is below **10 seconds**, the timer text changes style (CSS animation, red color + pulse) to warn the player.
+- If the timer reaches zero:
+  - The round is lost automatically,
+  - The correct city location is shown,
+  - The player loses one life,
+  - The game proceeds to the next round (if there are remaining lives).
+
+---
+
+## 6. Questions, Difficulty and Data
+
+### 6.1 Cities Dataset
+
+The cities and hints are stored in a separate file:
+
+- **`cities.js`**
+
+with a structure like:
 
 ```js
 const cities = [
@@ -89,14 +110,8 @@ const cities = [
     country: "Spain",
     lat: 41.3851,
     lon: 2.1734,
-    hint: "This city is home to a football club that has won multiple UEFA Champions League titles."
+    hint: "This city is home to a world-famous football club that plays in red and blue and dominated Europe around 2009–2015.",
+    difficulty: 5
   },
-  {
-    name: "Munich",
-    country: "Germany",
-    lat: 48.1351,
-    lon: 11.5820,
-    hint: "A football giant from this city has dominated the Bundesliga with many league championships."
-  },
-  // ... more cities
+  ...
 ];
