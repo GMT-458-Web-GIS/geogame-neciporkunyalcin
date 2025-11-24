@@ -92,7 +92,7 @@ These rules are also shown to the user in a **“How to Play”** modal before t
   - The game proceeds to the next round (if there are remaining lives).
 
 ---
-
+## Link:  https://gmt-458-web-gis.github.io/geogame-neciporkunyalcin/
 ## 6. Questions, Difficulty and Data
 
 ### 6.1 Cities Dataset
@@ -115,4 +115,4 @@ const cities = [
   },
   ...
 ];
-## Link:  https://gmt-458-web-gis.github.io/geogame-neciporkunyalcin/
+
