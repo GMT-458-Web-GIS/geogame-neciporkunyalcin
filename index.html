@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Satellite Sports City Guessr</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- OpenLayers CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.3.0/ol.css">
+</head>
+<body>
+  <header>
+    <h1>Satellite Sports City Guessr</h1>
+    <div id="high-score">High score: 0</div>
+  </header>
+
+  <main>
+    <div id="map"></div>
+
+    <aside id="game-panel">
+      <div id="panel-header">
+        <h2 id="hint-title">Sports Hint</h2>
+        <p id="hint-text">Press "Start Game" to see the first hint.</p>
+      </div>
+
+      <div class="status-row">
+        <span id="timer">Time: 45 s</span>
+        <span id="lives">Lives: ❤❤❤</span>
+      </div>
+
+      <div class="status-row">
+        <span id="round">Round: -</span>
+        <span id="score">Score: 0</span>
+      </div>
+
+      <div class="buttons-row">
+        <button id="start-btn">Start Game</button>
+        <button id="submit-btn" disabled>Submit Guess</button>
+      </div>
+
+      <div id="feedback"></div>
+      <div id="info-text">
+        Click on the map to select your guess location, then press "Submit Guess".
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    GMT458 – Web GIS Assignment 2 – GeoGame
+  </footer>
+
+  <!-- GAME RULES MODAL -->
+  <div id="rules-modal" class="modal">
+    <div class="modal-content">
+      <h2>How to Play</h2>
+      <p>
+        • The game continues until you lose all <strong>3 lives</strong>.<br>
+        • Each round has a <strong>45-second timer</strong>.<br>
+        • For each round, you see a <strong>sports-related hint</strong> about a world city.<br>
+        • Use the map to guess where that city is located.<br>
+        • Click on the map to select your guess, then press <strong>Submit Guess</strong>.<br>
+        • Your score is higher when you are <strong>closer</strong> and <strong>faster</strong>.<br>
+        • If your guess is very far from the true city or the time runs out, you lose one life.
+      </p>
+
+      <button id="close-modal-btn">OK, Start Playing</button>
+    </div>
+  </div>
+
+  <!-- OpenLayers JS -->
+  <script src="https://cdn.jsdelivr.net/npm/ol@v7.3.0/dist/ol.js"></script>
+  <!-- Cities dataset -->
+  <script src="cities.js"></script>
+  <!-- Game logic -->
+  <script src="game.js"></script>
+</body>
+</html>
